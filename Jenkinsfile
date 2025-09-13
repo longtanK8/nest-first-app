@@ -2,13 +2,13 @@ pipeline {
     agent any
 
     tools {
-        nodejs "Node20"  // From global tools
+        nodejs "Node20"
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/longtanK8/nest-first-app.git', branch: 'main' // Add credentialsId if private
+                git url: 'https://github.com/longtanK8/nest-first-app.git', branch: 'main'
             }
         }
         stage('Install Dependencies') {
