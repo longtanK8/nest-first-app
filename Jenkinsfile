@@ -23,7 +23,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'pm2 restart ecosystem.config.js || pm2 start ecosystem.config.js'
+                sh 'sudo versions/node/v20.19.5/bin/pm2 -v'
             }
         }
     }
