@@ -23,8 +23,17 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'pm2 -v'
+		echo 'Deploying with PM2..'
+                sh 'pm2 reload all --update-env'
             }
         }
+    }
+    post {
+	always{
+		echo 'Success'
+	}
+	failure {
+		echo 'Failed'
+	}
     }
 }
