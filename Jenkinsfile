@@ -24,7 +24,7 @@ pipeline {
         stage('Deploy') {
             steps {
 		script {
-			def isRunning = sh(script: "pm2 ls | grep "my-nest-app" || true", returnStdout: true).trim()
+			def isRunning = sh(script: "pm2 ls | grep 'my-nest-app' || true", returnStdout: true).trim()
 			if(isRunning) {
 				echo 'App is running, doing zero-downtime reload...'
 				sh 'pm2 reload my-nest-app --update-env'
