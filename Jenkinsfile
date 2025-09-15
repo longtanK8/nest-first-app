@@ -22,15 +22,19 @@ pipeline {
             }
         }
         stage('Deploy') {
+	    
             steps {
-		script {
-			def isRunning = sh(script: "pm2 ls | grep 'my-nest-app' || true", returnStdout: true).trim()
-			if(isRunning) {
-				echo 'App is running, doing zero-downtime reload...'
-				sh 'pm2 reload my-nest-app --update-env'
-			} else {
-				echo 'App is not running, starting new processes...'
-				sh 'pm2 start ecosystem.config.js --env production'
+		withEnv(['BUILD_ID=dontKillMe']) {
+			script {
+				def isRunning = sh(script: "pm2 ls | grep 'my-nest-app' || true", returnStdout: true).trim()
+				if(isRunning) {
+					echo 'App is running, doing zero-downtime reload...'
+					sh 'pm2 reload my-nest-app --update-env'
+				} else {
+					echo 'App is not running, starting new processes...'
+					sh 'pm2 start ecosystem.config.js --env production'
+				}
+				sh 'pm2 save'
 			}
 		}
             }
