@@ -23,8 +23,16 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-		echo 'Deploying with PM2..'
-                sh 'pm2 reload all --update-env'
+		script {
+			def isRunning = sh(script: "pm2 ls | grep "my-nest-app" || true", returnStdout: true).trim()
+			if(isRunning) {
+				echo 'App is running, doing zero-downtime reload...'
+				sh 'pm2 reload my-nest-app --update-env'
+			} else {
+				echo 'App's not running, starting new processes...'
+				sh 'pm2 start ecosystem.config.js --env production'
+			}
+		}
             }
         }
     }
