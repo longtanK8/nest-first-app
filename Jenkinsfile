@@ -28,7 +28,7 @@ pipeline {
 			script {
 				def isRunning = sh(script: "pm2 ls | grep 'my-nest-app' || true", returnStdout: true).trim()
 				if(isRunning) {
-					echo 'App is running, doing zero-downtime reload...'
+					echo 'App is runningg, doing zero-downtime reload...'
 					sh 'pm2 reload my-nest-app --update-env'
 				} else {
 					echo 'App is not running, starting new processes...'
