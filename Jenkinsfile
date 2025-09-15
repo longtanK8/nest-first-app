@@ -23,7 +23,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'versions/node/v20.19.5/bin/pm2 -v'
+                sh 'pm2 -v'
             }
         }
     }
