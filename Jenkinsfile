@@ -29,7 +29,7 @@ pipeline {
 				echo 'App is running, doing zero-downtime reload...'
 				sh 'pm2 reload my-nest-app --update-env'
 			} else {
-				echo 'App's not running, starting new processes...'
+				echo 'App is not running, starting new processes...'
 				sh 'pm2 start ecosystem.config.js --env production'
 			}
 		}
