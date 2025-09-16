@@ -27,30 +27,38 @@ pipeline {
         }
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                sh '''
+                    export NVM_DIR="${NVM_DIR}"
+                    [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
+                    npm install
+                '''
             }
         }
         stage('Build') {
             steps {
-                sh 'npm run build'
+                sh '''
+                    export NVM_DIR="${NVM_DIR}"
+                    [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
+                    npm run build
+                '''
             }
         }
         stage('Deploy') {
             steps {
                 script {
-                    def isRunning = sh(script: "pm2 ls | grep my-nest-app || echo 'not running'", returnStdout: true).trim()
+                    def isRunning = sh(script: "export NVM_DIR=\"${NVM_DIR}\"; [ -s \"\$NVM_DIR/nvm.sh\" ] && \\. \"\$NVM_DIR/nvm.sh\"; pm2 ls | grep my-nest-app || echo 'not running'", returnStdout: true).trim()
 
                     if (isRunning.contains("online")) {
                         echo "App is running, restarting..."
-                        sh 'pm2 restart my-nest-app'
+                        sh "export NVM_DIR=\"${NVM_DIR}\"; [ -s \"\$NVM_DIR/nvm.sh\" ] && \\. \"\$NVM_DIR/nvm.sh\"; pm2 restart my-nest-app"
                     } else {
                         echo "App is not running, starting new processes..."
                         // Clean up any old process before starting new one to prevent conflicts
-                        sh 'pm2 delete my-nest-app || true'
-                        sh 'pm2 start ecosystem.config.js --env production'
+                        sh "export NVM_DIR=\"${NVM_DIR}\"; [ -s \"\$NVM_DIR/nvm.sh\" ] && \\. \"\$NVM_DIR/nvm.sh\"; pm2 delete my-nest-app || true"
+                        sh "export NVM_DIR=\"${NVM_DIR}\"; [ -s \"\$NVM_DIR/nvm.sh\" ] && \\. \"\$NVM_DIR/nvm.sh\"; pm2 start ecosystem.config.js --env production"
                     }
 
-                    sh 'pm2 save'
+                    sh "export NVM_DIR=\"${NVM_DIR}\"; [ -s \"\$NVM_DIR/nvm.sh\" ] && \\. \"\$NVM_DIR/nvm.sh\"; pm2 save"
                 }
             }
         }
